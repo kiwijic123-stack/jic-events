@@ -761,6 +761,13 @@ section{scroll-margin-top:84px}
   background:#FBF1D3;border:1.5px solid #E3CE8B;border-radius:10px;
   padding:10px 14px;font-size:13.5px;font-weight:700;color:#7A5E00;margin-bottom:16px;
 }
+.km-name{display:block;font-size:13.5px;font-weight:700;margin-bottom:14px}
+.km-name input{
+  display:block;width:100%;margin-top:6px;padding:11px 12px;
+  border:1.5px solid var(--line);border-radius:10px;font-size:16px;
+  font-family:inherit;background:var(--washi);box-sizing:border-box;font-weight:400;
+}
+.km-name input:focus{outline:none;border-color:#C9A227;box-shadow:0 0 0 2px #FBF1D3}
 .km-kisei{border:none;margin-bottom:14px}
 .km-kisei legend{font-size:13.5px;font-weight:700;margin-bottom:8px}
 .km-radio{
@@ -1037,6 +1044,7 @@ section{scroll-margin-top:84px}
 
 <form name="kouryu-entry" data-netlify="true" netlify-honeypot="bot-field" hidden>
   <input type="text" name="イベント名">
+  <input type="text" name="お名前">
   <input type="text" name="期">
   <input type="text" name="bot-field">
 </form>
@@ -1050,6 +1058,7 @@ section{scroll-margin-top:84px}
       <h3 id="km-title"></h3>
       <p class="bm-meta" id="km-meta"></p>
       <p class="km-notice">※一般の方はご参加をご遠慮させていただいております。</p>
+      <label class="km-name">お名前<span class="req">*</span><input type="text" id="km-name" autocomplete="name" placeholder="例：山田はなこ"></label>
       <fieldset class="km-kisei">
         <legend>何期生ですか？<span class="req">*</span></legend>
         <label class="km-radio"><input type="radio" name="km-ki" value="1期生"><span>1期生</span></label>
@@ -1409,6 +1418,7 @@ section{scroll-margin-top:84px}
       kmEvent = EVENTS[+kBtn.dataset.ei];
       document.getElementById("km-title").textContent = kmEvent.title;
       document.getElementById("km-meta").textContent = kmEvent.dateLabel + "　" + (kmEvent.time||"") + "　" + kmEvent.place;
+      document.getElementById("km-name").value = "";
       document.querySelectorAll('input[name="km-ki"]').forEach(r=>r.checked=false);
       document.getElementById("km-error").hidden = true;
       const sub = document.getElementById("km-submit");
@@ -1438,13 +1448,16 @@ section{scroll-margin-top:84px}
   document.getElementById("km-submit").addEventListener("click", ()=>{
     const picked = document.querySelector('input[name="km-ki"]:checked');
     const err = document.getElementById("km-error");
-    if(!picked){ err.hidden = false; return; }
+    const kmName = document.getElementById("km-name").value.trim();
+    if(!kmName){ err.textContent = "お名前を入力してください。"; err.hidden = false; return; }
+    if(!picked){ err.textContent = "期を選択してください。"; err.hidden = false; return; }
     err.hidden = true;
     const sub = document.getElementById("km-submit");
     sub.disabled = true; sub.textContent = "確認中…";
     const body = new URLSearchParams({
       "form-name": "kouryu-entry",
       "イベント名": kmEvent.title + "（" + kmEvent.dateLabel + "）",
+      "お名前": kmName,
       "期": picked.value
     }).toString();
     // 記録はベストエフォート：送信の成否にかかわらず受講生にはURLを表示する
