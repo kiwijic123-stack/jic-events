@@ -18,7 +18,7 @@
   ══════════════════════════════════════════════════════
   イベントの追加・編集はこのすぐ下の EVENTS だけ触ればOKです。
   ・date を過去にすると自動で「終了済みのイベント」へ移動します
-  ・category は「説明会」「Open Session」「交流会」のいずれか
+  ・category は「説明会」「Open Session」「交流会」「お話会」のいずれか
   ・format は「オンライン」または「対面」
   ・link が無い場合は空文字 "" のままで大丈夫です（ボタン非表示）
   ・reserve: true を付けると「詳細・予約する」ボタン＝予約フォーム付きになります
@@ -28,6 +28,44 @@
 -->
 <script>
 const EVENTS = [
+  {
+    title: "JICざっくばらんお話会 第4回（昼の回）",
+    category: "お話会",
+    format: "オンライン",
+    date: "2026-10-21",
+    dateLabel: "10月21日（水）",
+    time: "12:00 ー 13:00",
+    place: "オンライン開催",
+    fee: "参加費：無料／事前申込制",
+    description: "日本語講師の「わたしらしい商品づくり」を話そう。経験・得意・好きなことを、わたしらしく生かして形にする。2回開催・どちらか都合のよい方でご参加ください。",
+    link: "https://docs.google.com/forms/d/e/1FAIpQLSctuf1ySmM4za_bTiG4SRAY1SaR4CKdvM-ofKwfY0CdPDqz7A/viewform",
+    linkLabel: "申し込みフォームへ"
+  },
+  {
+    title: "JICざっくばらんお話会 第4回（夜の回）",
+    category: "お話会",
+    format: "オンライン",
+    date: "2026-10-22",
+    dateLabel: "10月22日（木）",
+    time: "22:00 ー 23:00",
+    place: "オンライン開催",
+    fee: "参加費：無料／事前申込制",
+    description: "日本語講師の「わたしらしい商品づくり」を話そう。経験・得意・好きなことを、わたしらしく生かして形にする。2回開催・どちらか都合のよい方でご参加ください。",
+    link: "https://docs.google.com/forms/d/e/1FAIpQLSctuf1ySmM4za_bTiG4SRAY1SaR4CKdvM-ofKwfY0CdPDqz7A/viewform",
+    linkLabel: "申し込みフォームへ"
+  },
+  {
+    title: "JICざっくばらんお話会 第3回",
+    category: "お話会",
+    format: "オンライン",
+    date: "2026-10-19",
+    dateLabel: "10月19日（月）",
+    time: "15:00 ー 16:00／21:00 ー 22:00",
+    place: "オンライン開催",
+    fee: "参加費：無料／事前申込制",
+    description: "日本語講師の「わたしらしい商品づくり」を話そう。自分の商品を紹介したい方も、これから形にしたい方も。",
+    link: ""
+  },
   {
     title: "JIC受講生交流会（10月）",
     category: "交流会",
@@ -627,6 +665,11 @@ section{padding:36px 0}
 .cat-kouryu .btn-detail{background:#C9A227;box-shadow:0 3px 10px rgba(201,162,39,.35)}
 .cat-kouryu .btn-detail:hover{background:#A8871F;box-shadow:0 5px 14px rgba(201,162,39,.45)}
 
+/* ── ざっくばらんお話会（ワインレッド） ── */
+.cat-ohanashi .tag.cat{background:#F6E4E1;color:#8C2332}
+.cat-ohanashi .date-leaf{background:#8C2332}
+.cat-ohanashi.past .date-leaf{background:#B98F95}
+
 /* ── 講座スケジュール ── */
 .course-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:700px){.course-grid{grid-template-columns:1fr}}
@@ -866,6 +909,7 @@ section{scroll-margin-top:84px}
     <button class="chip" data-target="#courses">講座スケジュール</button>
     <button class="chip" data-cat="Open Session" aria-pressed="false">Open Session</button>
     <button class="chip" data-cat="交流会" aria-pressed="false">交流会</button>
+    <button class="chip" data-cat="お話会" aria-pressed="false">ざっくばらんお話会</button>
     <button class="chip" data-cat="説明会" aria-pressed="false">説明会・個別相談</button>
     <button class="chip" data-target="#camp">異文化理解研修</button>
   </div>
@@ -1137,7 +1181,7 @@ section{scroll-margin-top:84px}
       btn += '<a class="btn-after" href="'+ev.afterLink+'" target="_blank" rel="noopener">' +
         (isPast ? '振り返りシートを書く' : '振り返りシートを書く（ご参加後）') + '</a>';
     }
-    return '<article class="event-card'+(isPast?' past':'')+(ev.category==='交流会'?' cat-kouryu':'')+'" data-cat="'+ev.category+'">' +
+    return '<article class="event-card'+(isPast?' past':'')+(ev.category==='交流会'?' cat-kouryu':'')+(ev.category==='お話会'?' cat-ohanashi':'')+'" data-cat="'+ev.category+'">' +
       leafHTML(ev, isPast) +
       '<div class="event-body">' +
         '<div class="tag-row">' +
