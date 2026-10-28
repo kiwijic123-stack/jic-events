@@ -557,7 +557,11 @@ const COURSES = [
       { n: "第9回", date: "2026-10-08" },
       { n: "第10回", date: "2026-10-29" },
       { n: "第11回", date: "2026-11-12" },
-      { n: "第12回", date: "2026-11-26" }
+      { n: "第12回", date: "2026-11-26" },
+      { n: "第13回", date: "2026-12-10" },
+      { n: "第14回", date: "2026-12-17" },
+      { n: "第15回", date: "2027-01-07" },
+      { n: "第16回", date: "2027-01-21" }
     ]
   },
   {
@@ -575,7 +579,11 @@ const COURSES = [
       { n: "第9回", date: "2026-10-12" },
       { n: "第10回", date: "2026-11-02" },
       { n: "第11回", date: "2026-11-16" },
-      { n: "第12回", date: "2026-11-30" }
+      { n: "第12回", date: "2026-11-30" },
+      { n: "第13回", date: "2026-12-14" },
+      { n: "第14回", date: "2026-12-21" },
+      { n: "第15回", date: "2027-01-11" },
+      { n: "第16回", date: "2027-01-25" }
     ]
   },
   {
@@ -621,6 +629,15 @@ const COURSES = [
       { n: "第8回", date: "2026-12-20" },
       { n: "第9回", date: "2027-01-10" },
       { n: "第10回", date: "2027-01-24" }
+    ]
+  },
+  {
+    cohort: "4期生", cls: "日夜クラス", time: "18:30〜20:00",
+    sessions: [
+      { n: "オリエンテーション", date: "2026-11-08" },
+      { n: "第1回", date: "2026-11-22" },
+      { n: "第2回", date: "2026-12-06" },
+      { n: "第3回", date: "2026-12-27" }
     ]
   },
   {
@@ -817,6 +834,7 @@ section{padding:36px 0}
 .cohort.c1{background:#B98A2E}
 .cohort.c2{background:var(--kiwi)}
 .cohort.c3{background:#3D6FA6}
+.cohort.c4{background:#7E57A0}
 .course-head h3{font-size:16.5px;color:var(--ai)}
 .course-time{font-size:13px;color:var(--muted);margin-bottom:12px}
 .session-list{display:flex;flex-direction:column;gap:6px}
@@ -1368,7 +1386,7 @@ section{scroll-margin-top:84px}
   });
 
   function renderCourses(){
-    const cls = {"1期生":"c1","2期生":"c2","3期生":"c3"};
+    const cls = {"1期生":"c1","2期生":"c2","3期生":"c3","4期生":"c4"};
     document.getElementById("course-list").innerHTML = COURSES.map(c=>{
       const row = s=>{
         const d = new Date(s.date + "T00:00:00");
