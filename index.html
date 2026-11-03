@@ -845,6 +845,10 @@ section{padding:36px 0}
 .cat-ohanashi .date-leaf{background:#8C2332}
 .cat-ohanashi.past .date-leaf{background:#B98F95}
 
+/* ── 次回のイベント（強調枠） ── */
+#next-event .event-card{border:2px solid #C8102E;box-shadow:0 6px 20px rgba(200,16,46,.12)}
+#next-event .event-card:hover{transform:none}
+
 /* ── 講座スケジュール ── */
 .course-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:700px){.course-grid{grid-template-columns:1fr}}
@@ -1081,7 +1085,6 @@ section{scroll-margin-top:84px}
       <button class="navlink" data-target="#courses">講座スケジュール</button>
       <button class="navlink" data-target="#camp">異文化理解研修</button>
       <button class="navlink" data-target="#past">終了済み</button>
-      <a href="https://line.me/R/ti/p/@959siolo?oat_content=url&ts=07101418" target="_blank" rel="noopener">LINEで最新情報</a>
     </nav>
   </div>
 </header>
@@ -1144,18 +1147,10 @@ section{scroll-margin-top:84px}
     </div>
   </section>
 
-  <section id="line">
-    <div class="line-cta">
-      <h2>最新の講座・イベント情報を<br>LINEでお届けします</h2>
-      <p>開催予定の講座や交流イベント、募集開始のお知らせを公式LINEでご案内します。</p>
-      <ul>
-        <li>新しい講座・イベントの募集開始をお知らせ</li>
-        <li>文法会や交流イベントの開催情報を確認できる</li>
-        <li>予定が合わない場合も、次回開催を見逃しにくい</li>
-      </ul>
-      <a class="btn-line" href="https://line.me/R/ti/p/@959siolo?oat_content=url&ts=07101418" target="_blank" rel="noopener">LINEで最新情報を受け取る</a>
-      <small>※公式LINEの登録ページに移動します</small>
-    </div>
+  <section id="next-event">
+    <div class="section-head"><h2>次回のイベント</h2></div>
+    <p class="section-note">直近に開催するイベントです。こちらからお申し込みいただけます。</p>
+    <div class="event-list" id="next-event-card"></div>
   </section>
 </main>
 
@@ -1750,9 +1745,21 @@ section{scroll-margin-top:84px}
     });
   }
 
+  function renderNextEvent(){
+    const sec = document.getElementById("next-event");
+    const box = document.getElementById("next-event-card");
+    if(!sec || !box) return;
+    const next = EVENTS
+      .filter(ev => !ev.alwaysOpen && new Date(ev.date + "T00:00:00") >= today)
+      .sort((a,b)=> new Date(a.date) - new Date(b.date))[0];
+    if(!next){ sec.style.display = "none"; return; }
+    box.innerHTML = cardHTML(next, false);
+  }
+
   render();
   renderCourses();
   updateChipCounts();
+  renderNextEvent();
 })();
 </script>
 </body>
