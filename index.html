@@ -717,17 +717,41 @@ nav.gnav{display:flex;gap:22px;font-size:14px}
 
 /* ── filter ── */
 .filters{padding:8px 0 12px}
-.filter-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:10px}
+.filter-row{display:flex;flex-wrap:wrap;gap:9px;justify-content:flex-start;margin-bottom:10px}
 .chip{
-  border:2px solid var(--ai);background:#fff;border-radius:999px;
-  padding:12px 24px;font-size:15px;font-weight:700;cursor:pointer;color:var(--ai);
+  --cc:#C8102E;
+  display:inline-flex;align-items:center;gap:8px;
+  border:1.5px solid var(--line);background:#fff;border-radius:12px;
+  padding:11px 16px;font-size:14.5px;font-weight:700;cursor:pointer;color:var(--sumi);
   font-family:"Noto Sans JP",sans-serif;transition:all .15s;letter-spacing:.02em;
-  box-shadow:0 2px 6px rgba(36,67,92,.08);
+  box-shadow:0 2px 6px rgba(36,67,92,.07);
 }
-.chip:hover{background:var(--ai);color:#fff;transform:translateY(-1px)}
-.chip[aria-pressed="true"]{background:#C8102E;border-color:#C8102E;color:#fff;box-shadow:0 3px 10px rgba(200,16,46,.3)}
-.chip:focus-visible{outline:3px solid #C8102E;outline-offset:2px}
-@media(max-width:560px){.chip{padding:11px 18px;font-size:14px}}
+.chip::before{
+  content:"";width:10px;height:10px;border-radius:50%;background:var(--cc);
+  flex:none;transition:transform .15s;
+}
+.chip:hover{border-color:var(--cc);transform:translateY(-2px);box-shadow:0 5px 14px rgba(36,67,92,.14)}
+.chip:hover::before{transform:scale(1.25)}
+.chip:active{transform:translateY(0)}
+.chip[aria-pressed="true"]{background:var(--cc);border-color:var(--cc);color:#fff}
+.chip[aria-pressed="true"]::before{background:#fff}
+.chip:focus-visible{outline:3px solid var(--cc);outline-offset:2px}
+.chip[data-cat="Open Session"]{--cc:#24435C}
+.chip[data-cat="交流会"]{--cc:#C9A227}
+.chip[data-cat="お話会"]{--cc:#8C2332}
+.chip[data-cat="説明会"]{--cc:#5F9440}
+.chip[data-target="#courses"]{--cc:#3D6FA6}
+.chip[data-target="#camp"]{--cc:#7A8087}
+.chip-n{
+  min-width:22px;height:22px;padding:0 6px;border-radius:999px;
+  background:var(--cc);color:#fff;font-size:12px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.chip[aria-pressed="true"] .chip-n{background:rgba(255,255,255,.25)}
+.chip-n:empty{display:none}
+.chip-arrow{font-size:12px;color:var(--cc);font-weight:700}
+.chip[aria-pressed="true"] .chip-arrow{color:#fff}
+@media(max-width:560px){.chip{padding:10px 13px;font-size:13.5px}}
 
 /* ── sections ── */
 section{padding:36px 0}
@@ -1069,13 +1093,13 @@ section{scroll-margin-top:84px}
 
 <div class="filters wrap">
   <div class="filter-row" id="cat-filter" role="group" aria-label="内容で絞り込む">
-    <button class="chip" data-cat="all" aria-pressed="true">すべて</button>
-    <button class="chip" data-target="#courses">講座スケジュール</button>
-    <button class="chip" data-cat="Open Session" aria-pressed="false">Open Session</button>
-    <button class="chip" data-cat="交流会" aria-pressed="false">交流会</button>
-    <button class="chip" data-cat="お話会" aria-pressed="false">ざっくばらんお話会</button>
-    <button class="chip" data-cat="説明会" aria-pressed="false">説明会・個別相談</button>
-    <button class="chip" data-target="#camp">異文化理解研修</button>
+    <button class="chip" data-cat="all" aria-pressed="true">すべて<span class="chip-n" data-cn="all"></span></button>
+    <button class="chip" data-target="#courses">講座スケジュール<span class="chip-arrow">↓</span></button>
+    <button class="chip" data-cat="Open Session" aria-pressed="false">Open Session<span class="chip-n" data-cn="Open Session"></span></button>
+    <button class="chip" data-cat="交流会" aria-pressed="false">交流会<span class="chip-n" data-cn="交流会"></span></button>
+    <button class="chip" data-cat="お話会" aria-pressed="false">ざっくばらんお話会<span class="chip-n" data-cn="お話会"></span></button>
+    <button class="chip" data-cat="説明会" aria-pressed="false">説明会・個別相談<span class="chip-n" data-cn="説明会"></span></button>
+    <button class="chip" data-target="#camp">異文化理解研修<span class="chip-arrow">↓</span></button>
   </div>
 </div>
 
@@ -1708,8 +1732,26 @@ section{scroll-margin-top:84px}
     }).catch(()=>{}).finally(showKmZoom);
   });
 
+  // タブの件数バッジ（募集中のイベント数）
+  function updateChipCounts(){
+    const counts = {};
+    let total = 0;
+    EVENTS.forEach(ev=>{
+      if(new Date(ev.date + "T00:00:00") >= today){
+        counts[ev.category] = (counts[ev.category]||0) + 1;
+        total++;
+      }
+    });
+    document.querySelectorAll(".chip-n").forEach(b=>{
+      const key = b.dataset.cn;
+      const n = key === "all" ? total : (counts[key]||0);
+      b.textContent = n > 0 ? n : "";
+    });
+  }
+
   render();
   renderCourses();
+  updateChipCounts();
 })();
 </script>
 </body>
