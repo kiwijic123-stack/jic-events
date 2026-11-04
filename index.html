@@ -29,6 +29,46 @@
 <script>
 const EVENTS = [
   {
+    title: "JICざっくばらんお話会 11月（昼の回）",
+    category: "お話会",
+    format: "オンライン",
+    date: "2026-11-05",
+    dateLabel: "11月5日（木）",
+    time: "12:00 ー 13:00",
+    place: "オンライン開催",
+    fee: "参加費：無料／事前申込制",
+    description: "日本語講師の『わたしらしい強みと価値』を話そう。自分には当たり前のことが、誰かの役に立つかもしれない。昼・夜の2回開催、どちらか都合のよい回でご参加ください。",
+    image: "ohanashi-flyer-nov.jpg",
+    link: "https://docs.google.com/forms/d/e/1FAIpQLScDccNIn6fhKZQvkRjJgJZljSf925XePuJNvlAneJl_9XeNJg/viewform",
+    linkLabel: "申し込みフォームへ"
+  },
+  {
+    title: "JICざっくばらんお話会 11月（夜の回）",
+    category: "お話会",
+    format: "オンライン",
+    date: "2026-11-05",
+    dateLabel: "11月5日（木）",
+    time: "21:00 ー 22:00",
+    place: "オンライン開催",
+    fee: "参加費：無料／事前申込制",
+    description: "日本語講師の『わたしらしい強みと価値』を話そう。自分には当たり前のことが、誰かの役に立つかもしれない。昼・夜の2回開催、どちらか都合のよい回でご参加ください。",
+    image: "ohanashi-flyer-nov.jpg",
+    link: "https://docs.google.com/forms/d/e/1FAIpQLScDccNIn6fhKZQvkRjJgJZljSf925XePuJNvlAneJl_9XeNJg/viewform",
+    linkLabel: "申し込みフォームへ"
+  },
+  {
+    title: "JIC cafe&bar",
+    category: "お話会",
+    format: "オンライン",
+    date: "2026-11-11",
+    dateLabel: "11月11日（水）",
+    time: "21:00 ー 22:30",
+    place: "オンライン開催",
+    fee: "参加費：無料／事前申込制",
+    description: "夜のひととき、飲みものを片手に気軽におしゃべりするオンラインの会です。",
+    ask: true
+  },
+  {
     title: "JIC Open Session 11月 第1回｜質問力",
     category: "Open Session",
     format: "オンライン",
@@ -1035,6 +1075,15 @@ section{scroll-margin-top:84px}
 .km-radio input{accent-color:#C9A227;width:16px;height:16px}
 .km-submit{background:#C9A227;border:none;cursor:pointer;font-family:inherit;width:100%;box-shadow:0 3px 10px rgba(201,162,39,.35)}
 .km-submit:hover{background:#A8871F}
+.am-eyebrow{color:#8C2332}
+.am-submit{background:#8C2332;border:none;cursor:pointer;font-family:inherit;width:100%;box-shadow:0 3px 10px rgba(140,35,50,.3)}
+.am-submit:hover{background:#6E1B27}
+.km-name textarea{
+  display:block;width:100%;margin-top:6px;padding:10px 12px;
+  border:1.5px solid var(--line);border-radius:8px;font-size:15px;
+  font-family:"Noto Sans JP",sans-serif;background:#fff;color:var(--sumi);resize:vertical;
+}
+.km-name textarea:focus{outline:none;border-color:#8C2332}
 
 /* ── 参加URLポップアップ ── */
 .modal-overlay{
@@ -1291,6 +1340,14 @@ section{scroll-margin-top:84px}
   </div>
 </div>
 
+<form name="event-entry" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="text" name="イベント名">
+  <input type="text" name="お名前">
+  <input type="email" name="メールアドレス">
+  <input type="text" name="お悩み・ご相談">
+  <input type="text" name="bot-field">
+</form>
+
 <form name="kouryu-entry" data-netlify="true" netlify-honeypot="bot-field" hidden>
   <input type="text" name="イベント名">
   <input type="text" name="お名前">
@@ -1307,6 +1364,30 @@ section{scroll-margin-top:84px}
     <a class="btn-detail" id="oc-apply" href="#" target="_blank" rel="noopener">記入済み・はじめて参加する方<br><span class="oc-sub">→ 申込フォームへ進む</span></a>
     <a class="btn-after" id="oc-furikaeri" href="#" target="_blank" rel="noopener">まだの方<br><span class="oc-sub">→ 先に振り返りシートを記入する</span></a>
     <p class="zm-note">振り返りシートのご記入後、改めてこのボタンからお申し込みください。</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="ask-modal" hidden>
+  <div class="modal kouryu-modal" role="dialog" aria-modal="true" aria-labelledby="am-title">
+    <button class="modal-close" id="am-close" aria-label="閉じる">×</button>
+
+    <div id="am-gate-view">
+      <p class="modal-eyebrow am-eyebrow">✦ 事前申込 ✦</p>
+      <h3 id="am-title"></h3>
+      <p class="bm-meta" id="am-meta"></p>
+      <label class="km-name">お名前<span class="req">*</span><input type="text" id="am-name" autocomplete="name" placeholder="例：山田はなこ"></label>
+      <label class="km-name">メールアドレス<span class="req">*</span><input type="email" id="am-mail" autocomplete="email" placeholder="例：hanako@example.com"></label>
+      <label class="km-name">お悩み・話してみたいこと<span class="req">*</span><textarea id="am-note" rows="3" placeholder="例：レッスンの進め方で悩んでいることがあります"></textarea></label>
+      <button type="button" class="btn-detail am-submit" id="am-submit">送信して参加URLを受け取る</button>
+      <p class="bm-error" id="am-error" hidden></p>
+    </div>
+
+    <div id="am-done-view" hidden>
+      <p class="modal-eyebrow am-eyebrow">✦ お申し込みありがとうございます ✦</p>
+      <h3>ご参加お待ちしています</h3>
+      <div id="am-zoom"></div>
+      <p class="zm-note" id="am-done-note"></p>
+    </div>
   </div>
 </div>
 
@@ -1387,6 +1468,8 @@ section{scroll-margin-top:84px}
     let btn = "";
     if(!isPast && ev.zoom && ev.category === "交流会"){
       btn = '<button class="btn-detail btn-kouryu" data-ei="'+EVENTS.indexOf(ev)+'">参加する（受講生限定）</button>';
+    } else if(!isPast && ev.ask){
+      btn = '<button class="btn-detail btn-ask" data-ei="'+EVENTS.indexOf(ev)+'">申し込む（参加URLを受け取る）</button>';
     } else if(!isPast && ev.reserve){
       btn = '<button class="btn-detail btn-reserve" data-ei="'+EVENTS.indexOf(ev)+'">詳細・予約する</button>';
     } else if(!isPast && ev.zoom){
@@ -1743,6 +1826,75 @@ section{scroll-margin-top:84px}
   });
   document.addEventListener("keydown", e=>{
     if(e.key === "Escape" && !ocOverlay.hidden){ ocOverlay.hidden = true; document.body.style.overflow = ""; }
+  });
+
+  // ── お話会・説明会 事前申込モーダル（名前＋メール＋お悩み → 送信後に参加URLを表示） ──
+  const amOverlay = document.getElementById("ask-modal");
+  let amEvent = null;
+  document.addEventListener("click", e=>{
+    const aBtn = e.target.closest(".btn-ask");
+    if(aBtn){
+      amEvent = EVENTS[+aBtn.dataset.ei];
+      document.getElementById("am-title").textContent = amEvent.title;
+      document.getElementById("am-meta").textContent = amEvent.dateLabel + "　" + (amEvent.time||"") + "　" + amEvent.place;
+      document.getElementById("am-name").value = "";
+      document.getElementById("am-mail").value = "";
+      document.getElementById("am-note").value = "";
+      document.getElementById("am-error").hidden = true;
+      const sub = document.getElementById("am-submit");
+      sub.disabled = false; sub.textContent = "送信して参加URLを受け取る";
+      document.getElementById("am-gate-view").hidden = false;
+      document.getElementById("am-done-view").hidden = true;
+      amOverlay.hidden = false;
+      document.body.style.overflow = "hidden";
+      return;
+    }
+    if(e.target === amOverlay || e.target.closest("#am-close")){
+      amOverlay.hidden = true; document.body.style.overflow = "";
+    }
+  });
+  document.addEventListener("keydown", e=>{
+    if(e.key === "Escape" && !amOverlay.hidden){ amOverlay.hidden = true; document.body.style.overflow = ""; }
+  });
+  function showAmDone(){
+    const z = amEvent.zoom;
+    if(z){
+      document.getElementById("am-zoom").innerHTML =
+        '<div class="zm-row"><span class="zm-label">Zoom URL</span><a href="'+z.url+'" target="_blank" rel="noopener">'+z.url+'</a></div>' +
+        '<div class="zm-row"><span class="zm-label">ミーティングID</span><span>'+z.id+'</span></div>' +
+        '<div class="zm-row"><span class="zm-label">パスコード</span><span>'+z.pass+'</span></div>';
+      document.getElementById("am-done-note").textContent = "開始時間になりましたら、上のURLからご参加ください。";
+    } else {
+      document.getElementById("am-zoom").innerHTML = "";
+      document.getElementById("am-done-note").textContent = "参加URLは、ご記入いただいたメールアドレスへ追ってお送りします。";
+    }
+    document.getElementById("am-gate-view").hidden = true;
+    document.getElementById("am-done-view").hidden = false;
+  }
+  document.getElementById("am-submit").addEventListener("click", ()=>{
+    const err = document.getElementById("am-error");
+    const name = document.getElementById("am-name").value.trim();
+    const mail = document.getElementById("am-mail").value.trim();
+    const note = document.getElementById("am-note").value.trim();
+    if(!name){ err.textContent = "お名前を入力してください。"; err.hidden = false; return; }
+    if(!mail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){ err.textContent = "メールアドレスを正しく入力してください。"; err.hidden = false; return; }
+    if(!note){ err.textContent = "お悩み・話してみたいことをご記入ください。"; err.hidden = false; return; }
+    err.hidden = true;
+    const sub = document.getElementById("am-submit");
+    sub.disabled = true; sub.textContent = "送信中…";
+    const body = new URLSearchParams({
+      "form-name": "event-entry",
+      "イベント名": amEvent.title + "（" + amEvent.dateLabel + " " + (amEvent.time||"") + "）",
+      "お名前": name,
+      "メールアドレス": mail,
+      "お悩み・ご相談": note
+    }).toString();
+    // 記録はベストエフォート：送信の成否にかかわらず参加URLを表示する
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: body
+    }).catch(()=>{}).finally(showAmDone);
   });
 
   // ── 交流会 受講生限定モーダル ──
