@@ -1,0 +1,88 @@
+# JICイベントカレンダー 引き継ぎ（CLAUDE.md）
+
+JIC協会のイベントカレンダー公開サイト。運用者＝濱野優輝（ゆうき）さん。
+チャットで更新依頼を受けたら、編集→テスト→push まで行う（ユーザー側の操作は不要）。
+
+## 基本情報
+
+| 項目 | 内容 |
+|---|---|
+| 公開URL | https://jic-events.netlify.app |
+| リポジトリ | https://github.com/kiwijic123-stack/jic-events （branch: main） |
+| 公開方法 | Netlify継続デプロイ。mainにpushすると自動公開（ビルドコマンドなし・公開dir=ルート） |
+| 申込通知先 | kiwi.jic.123@gmail.com（Netlify Forms「すべてのフォーム」通知設定済み） |
+| 構成 | index.html 1枚（自己完結・JSレンダリング）＋ /soudan/ ＋ /camp/ ＋ チラシ画像jpg |
+
+## 絶対に守ること
+
+1. **push前に必ずjsdomでテストする**（過去にモーダル表示バグ・ボタン不動作で手戻りあり）
+2. **日付・曜日は必ずコードでファクトチェック**（`new Date()`で曜日算出。2027年1月などの年またぎ注意）
+3. **受講生の個人名・クラス用Zoomリンクをこのサイトに載せない**（スプレッドシートには載っているが公開禁止。公開してよいZoomは下記3つのみ）
+4. **Netlifyの手動操作（zipドラッグ等）はしない**。更新はgit pushのみ
+5. Netlifyのフォーム検出はON状態を維持（OFFにすると「送信できませんでした」になる）
+6. コンテナからapi.netlify.comへは403で届かない（GitHub経由のみ）。公開確認はWebFetchで行う
+
+## 更新の流れ
+
+```bash
+cd /home/claude/jic-events   # なければ git clone https://github.com/kiwijic123-stack/jic-events
+git pull
+# index.html を編集（EVENTSやCOURSES配列が主な編集対象）
+# jsdomでテスト（NODE_PATH=/home/claude/node_modules node test.js）
+git add -A
+git -c user.name="JIC Events" -c user.email="kiwi.jic.123@gmail.com" commit -m "..."
+git push origin HEAD:main
+# 1〜2分でNetlifyが自動公開
+```
+
+jsdomテストの定型：`win.Element.prototype.scrollIntoView=function(){}`、`win.scrollTo=function(){}`、`win.fetch`をモック。クリックは`new win.MouseEvent("click",{bubbles:true})`。
+
+## サイトの構造（2026-11-04時点）
+
+- **タブ別ページ構成（SPA）**：トップ＝カラーバー型メニュー（Open Session／JIC受講生交流会／ざっくばらんお話会／説明会・個別相談／講座スケジュール／異文化理解研修）。ハッシュ`#v=`連動でスマホの戻るボタン対応。全ページ末尾に「次回のイベント」カード（直近イベントの申込カード）を常時表示
+- **イベントは`EVENTS`配列**：`date`が今日以降＝募集中、過去＝終了済みに自動振り分け。手動で移動する必要なし
+- **講座日程は`COURSES`配列**（1〜4期生の各クラス・全16回＋オリエン）
+- **チラシ画像はタップで拡大**（lightbox。`image:`プロパティに900px幅・quality82のjpgを指定。PILで変換して repo直下に置く）
+- カテゴリー色：Open Session=紺#24435C／交流会=黄金#C9A227／お話会=ワインレッド#8C2332／説明会=緑#5F9440／講座=#3D6FA6／研修=#7A8087
+
+## EVENTSのプロパティとボタンの出し分け（優先順）
+
+1. `zoom`＋category"交流会" → 受講生限定モーダル（名前＋期を記入→Zoom表示。一般参加不可の注意文あり）
+2. `ask: true` → **サイト内申込モーダル**（お名前・メール・お悩み必須 → Netlifyフォーム`event-entry`でJICメールに通知 → `zoom`があれば参加URL自動表示、なければ「追ってメールでご案内」表示）。お話会・説明会用
+3. `reserve: true` → 予約モーダル（姓名・メール → `event-booking`）
+4. `zoom`のみ → 「参加URLを見る」ポップ
+5. `link`＋`afterLink`＋Open Session → 振り返りシート確認ポップ経由でGoogleフォームへ
+6. `link`のみ → 外部リンクボタン（`linkLabel`でラベル指定）
+- `alwaysOpen: true` → 日付葉が「随時受付中」（無料個別相談 → /soudan/ へリンク）
+
+## 公開してよいZoom
+
+※Open SessionのZoomはサイトに載せない運用（Googleフォームの確認メッセージで自動案内。URL自体はスプレッドシート「スケジュール・Zoom管理」の『JIC Open Session URL』列にある。このファイルはNetlifyで公開されるため、ここにも書かない）
+
+- **受講生交流会**：https://us06web.zoom.us/j/85287609476?pwd=jReYvMz3NvSocx4w9VYaiypk5HczhH.1 ／ ID 852 8760 9476 ／ パス 015436
+- **ざっくばらんお話会**：https://us06web.zoom.us/j/82900167798?pwd=plnROXsgmbEywRXvglTJP0Zf1xVgXL.1 ／ ID 829 0016 7798 ／ パス 968303
+
+## Googleフォーム（運用者側で設定済み・サイトからリンク）
+
+- Open Session申込：1FAIpQLSdCXBwgwCq3UYV7C7KLxOC52AY4gM3Mhik0PiTcPBP7oAkNgA（確認メッセージでZoom案内）
+- Open Session振り返りシート：1FAIpQLSeYJC-mzvyECS9b-zfpFlDxvwLt-OfqlIr03Ct4p0Bv76KF5A
+- お話会（11/5）申込：1FAIpQLScDccNIn6fhKZQvkRjJgJZljSf925XePuJNvlAneJl_9XeNJg
+
+## Netlifyフォーム名（検出用hiddenフォームがindex.html等に設置済み）
+
+event-booking／camp-booking／kouryu-entry／soudan-booking（/soudan/）／event-entry（お話会・説明会の申込）
+※新フォームを増やすときは、検出用のhidden静的フォームを置いてからpush
+
+## 運用ルール（ユーザーの意向）
+
+- スケジュール更新はスプレッドシート（受講生日程・スケジュール/Zoom管理）を渡されるので、**ダブルチェック体制**（機械抽出＋逆照合）で反映
+- Open Sessionのナンバリングは2026年9月〜が第1回（8月分はお試し期間）
+- チラシをもらったら該当イベントに画像を付け、タイトル・文言もチラシ表記に合わせる
+- 交流会は受講生限定（一般参加不可の注意書きを維持）
+- 更新したら「1〜2分で反映」と伝え、変更点を簡潔に報告
+
+## 未解決・保留
+
+- JIC Café&Bar（11/11）の参加Zoom URLが未登録（申込完了画面は「追ってメールでご案内」表示中）。URLが来たら`zoom`を追加すれば自動表示に切り替わる
+- Café&Barのチラシは「公式LINEから申込」表記だが、サイトはサイト内フォーム受付。どちらに寄せるかユーザーに確認中
+- Netlifyに重複サイト「benevolent-queijadas-1e8c3b」が残っている（削除は任意）
