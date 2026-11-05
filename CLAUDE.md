@@ -60,7 +60,7 @@ jsdomテストの定型：`win.Element.prototype.scrollIntoView=function(){}`、
 ※Open SessionのZoomはサイトに載せない運用（Googleフォームの確認メッセージで自動案内。URL自体はスプレッドシート「スケジュール・Zoom管理」の『JIC Open Session URL』列にある。このファイルはNetlifyで公開されるため、ここにも書かない）
 
 - **受講生交流会**：https://us06web.zoom.us/j/85287609476?pwd=jReYvMz3NvSocx4w9VYaiypk5HczhH.1 ／ ID 852 8760 9476 ／ パス 015436
-- **ざっくばらんお話会**：https://us06web.zoom.us/j/82900167798?pwd=plnROXsgmbEywRXvglTJP0Zf1xVgXL.1 ／ ID 829 0016 7798 ／ パス 968303
+- **ざっくばらんお話会**（2026-11-05〜）：https://us06web.zoom.us/j/88350567502?pwd=nCl9caxwFLYCDdcam1VrJDNPHewuBy.1 ／ ID 883 5056 7502 ／ パス 645373
 
 ## Googleフォーム（運用者側で設定済み・サイトからリンク）
 
