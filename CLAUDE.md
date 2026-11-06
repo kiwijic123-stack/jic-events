@@ -51,7 +51,7 @@ jsdomテストの定型：`win.Element.prototype.scrollIntoView=function(){}`、
 2. `ask: true` → **サイト内申込モーダル**（お名前・メール・お悩み必須 → Netlifyフォーム`event-entry`でJICメールに通知 → `zoom`があれば参加URL自動表示、なければ「追ってメールでご案内」表示）。お話会・説明会用
 3. `reserve: true` → 予約モーダル（姓名・メール → `event-booking`）
 4. `zoom`のみ → 「参加URLを見る」ポップ
-5. `link`＋`afterLink`＋Open Session → 振り返りシート確認ポップ経由でGoogleフォームへ
+5. `link`＋`afterLink` → 振り返りシート確認ポップ経由でGoogleフォームへ（Open Session・ざっくばらんお話会。終了後のカードには「振り返りシートを書く」ボタンが残る）
 6. `link`のみ → 外部リンクボタン（`linkLabel`でラベル指定）
 - `alwaysOpen: true` → 日付葉が「随時受付中」（無料個別相談 → /soudan/ へリンク）
 
@@ -66,7 +66,9 @@ jsdomテストの定型：`win.Element.prototype.scrollIntoView=function(){}`、
 
 - Open Session申込：1FAIpQLSdCXBwgwCq3UYV7C7KLxOC52AY4gM3Mhik0PiTcPBP7oAkNgA（確認メッセージでZoom案内）
 - Open Session振り返りシート：1FAIpQLSeYJC-mzvyECS9b-zfpFlDxvwLt-OfqlIr03Ct4p0Bv76KF5A
-- お話会（11/5）申込：1FAIpQLScDccNIn6fhKZQvkRjJgJZljSf925XePuJNvlAneJl_9XeNJg
+- ざっくばらんお話会 申込（使い回し）：1FAIpQLScDccNIn6fhKZQvkRjJgJZljSf925XePuJNvlAneJl_9XeNJg（確認メッセージでZoom案内）
+- ざっくばらんお話会 振り返りシート（使い回し）：1FAIpQLSdQMSeHFh2gCY2OI7--Qon5fN4V6vPr28tBdTNvewkdbMT43g
+- 2つとも「回答を1回に制限」オフ・「回答の編集」オフ。参加者には「イベントカレンダーを見てね」だけで済む導線（申込も振り返りもサイトのカードから）
 
 ## Netlifyフォーム名（検出用hiddenフォームがindex.html等に設置済み）
 
