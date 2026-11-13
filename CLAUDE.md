@@ -55,6 +55,7 @@ jsdomテストの定型：`win.Element.prototype.scrollIntoView=function(){}`、
 4. `zoom`のみ → 「参加URLを見る」ポップ
 5. `link`＋`afterLink` → 振り返りシート確認ポップ経由でGoogleフォームへ（Open Session・ざっくばらんお話会。終了後のカードには「振り返りシートを書く」ボタンが残る）
 6. `link`のみ → 外部リンクボタン（`linkLabel`でラベル指定）
+- `deadline: "11月13日（金）"` → カードのタイトル上に「〆 お申込みは◯◯まで」の帯（募集中のときだけ）
 - `alwaysOpen: true` → 日付葉が「随時受付中」（無料個別相談 → /soudan/ へリンク）
 
 ## 公開してよいZoom

@@ -40,7 +40,8 @@ const EVENTS = [
     description: "気になる文法を見直し、“教える自信”につなげる全3回。選べる3つのクラス（N5・N4／N3／N2）、各クラス最少3名〜最大6名。欠席時は録画視聴可（2027年3月まで）。こんな方へ：知識にあと一歩、自信が持てない／学習者にどう説明したらいいか迷う。ご希望のクラス・知りたい文法をフォームからお知らせください。※各レベルの文法を3回ですべて網羅する講座ではありません。",
     image: "bunpou-brushup-flyer.jpg",
     link: "https://docs.google.com/forms/d/e/1FAIpQLSdnseA4ubXyrJbBEReFEaRfkRni9r3TtPhKxMXcu1h0RnLE4A/viewform",
-    linkLabel: "申し込みフォームへ"
+    linkLabel: "申し込みフォームへ",
+    deadline: "11月13日（金）"
   },
   {
     title: "JIC認定日本語講師育成プログラム 体験相談会",
@@ -1023,6 +1024,20 @@ section{padding:36px 0}
 .ended-mini-btn:hover{border-color:var(--ai);color:var(--ai)}
 @media(max-width:480px){.ended-mini{flex-wrap:wrap}.ended-mini-btn{width:100%}}
 
+/* ── 締切の帯（EVENTSに deadline: "11月13日（金）" を入れると表示。終了後は出さない） ── */
+.deadline-band{
+  display:flex;align-items:center;gap:10px;margin:2px 0 12px;padding:10px 16px;
+  background:#C8102E;color:#fff;border-radius:8px;font-size:16px;font-weight:700;letter-spacing:.05em;line-height:1.4;
+  box-shadow:0 3px 10px rgba(200,16,46,.25);
+}
+.deadline-band .dl-mark{
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+  width:28px;height:28px;border-radius:50%;background:#fff;color:#C8102E;font-size:16px;font-weight:900;
+}
+.cat-bunpou .deadline-band{background:#8C2332;box-shadow:0 3px 10px rgba(140,35,50,.28)}
+.cat-bunpou .deadline-band .dl-mark{color:#8C2332}
+@media(max-width:480px){.deadline-band{font-size:15px;padding:9px 12px}}
+
 /* ── 次回のイベント（強調枠） ── */
 #next-event .event-card{border:2px solid #C8102E;box-shadow:0 6px 20px rgba(200,16,46,.12)}
 #next-event .event-card:hover{transform:none}
@@ -1673,6 +1688,7 @@ window.jicSend = function(body){
           '<span class="tag cat">'+(ev.category==='お話会'?'JICひろば':ev.category)+'</span>' +
           '<span class="tag fmt">'+ev.format+'</span>' +
         '</div>' +
+        (ev.deadline && !isPast ? '<p class="deadline-band"><span class="dl-mark">〆</span>お申込みは'+ev.deadline+'まで</p>' : '') +
         '<h3>'+ev.title+'</h3>' +
         (ev.image ? '<img class="event-img" src="'+ev.image+'" alt="'+ev.title+' ご案内" loading="lazy">' : '') +
         (ev.description ? '<p class="desc">'+ev.description+'</p>' : '') +
