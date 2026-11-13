@@ -135,6 +135,30 @@ footer a{color:#DDE4EA}
 </form>
 
 <script>
+// ── 申込の送信先：JICのGoogleフォーム「JICイベントカレンダー 受付（サイトから自動送信）」（kiwi.jic.123）
+// 回答はフォームに貯まり、JICのメールに通知が届く。Netlify Forms からの引っ越し（2026-11-13）
+window.jicSend = function(body){
+  const p = new URLSearchParams(body);
+  if((p.get("bot-field")||"").trim()) return Promise.resolve({ok:true});
+  const KIND = {"soudan-booking":"無料個別相談","event-booking":"イベント予約（Café&Barなど）","event-entry":"お話会・説明会の申込","kouryu-entry":"受講生交流会（参加URLを表示）","camp-booking":"異文化理解研修の申込"};
+  const kind = p.get("form-name")||"";
+  const name = p.get("お名前") || [p.get("姓"),p.get("名")].filter(Boolean).join(" ");
+  const ev = [p.get("イベント名"),p.get("開催日時")].filter(Boolean).join("／");
+  const used = ["form-name","bot-field","お名前","姓","名","メールアドレス","イベント名","開催日時"];
+  const rest = [];
+  p.forEach((v,k)=>{ if(!used.includes(k) && String(v).trim()) rest.push(k+"："+v); });
+  const out = new URLSearchParams();
+  out.append("entry.129651137", KIND[kind]||kind);
+  out.append("entry.2103293136", ev);
+  out.append("entry.666709429", name);
+  out.append("entry.441870969", p.get("メールアドレス")||"");
+  out.append("entry.679977609", rest.join(String.fromCharCode(10)));
+  return fetch("https://docs.google.com/forms/d/e/1FAIpQLSeZ9z8ZKJHpCVT4Hm2pO8Cskodo9zQRMs-2DUvcO8JJUUwehQ/formResponse", {
+    method:"POST", mode:"no-cors", body: out
+  }).then(()=>({ok:true}));
+};
+</script>
+<script>
 (function(){
   const form = document.getElementById("soudan-form");
   const err = document.getElementById("err");
@@ -147,11 +171,7 @@ footer a{color:#DDE4EA}
     else if(!g("第1希望").value.trim() || !g("第2希望").value.trim() || !g("第3希望").value.trim()) msg = "ご希望の日程を3つご記入ください。";
     if(msg){ err.textContent = msg; err.hidden = false; return; }
     btn.disabled = true; btn.textContent = "送信中…"; err.hidden = true;
-    fetch("/", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams(new FormData(form)).toString()
-    }).then(res=>{
+    jicSend(new URLSearchParams(new FormData(form)).toString()).then(res=>{
       if(!res.ok) throw new Error("bad");
       document.getElementById("form-view").hidden = true;
       document.getElementById("done-view").hidden = false;

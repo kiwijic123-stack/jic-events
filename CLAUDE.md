@@ -72,7 +72,14 @@ jsdomテストの定型：`win.Element.prototype.scrollIntoView=function(){}`、
 - ざっくばらんお話会 振り返りシート（使い回し）：1FAIpQLSdQMSeHFh2gCY2OI7--Qon5fN4V6vPr28tBdTNvewkdbMT43g
 - 2つとも「回答を1回に制限」オフ・「回答の編集」オフ。参加者には「イベントカレンダーを見てね」だけで済む導線（申込も振り返りもサイトのカードから）
 
-## Netlifyフォーム名（検出用hiddenフォームがindex.html等に設置済み）
+## サイト内フォームの送信先（2026-11-13〜 Googleフォームに移行）
+
+- サイト内の申込（個別相談・Café&Bar等の予約・お話会/説明会の申込・交流会・研修）は、すべて `jicSend()` で JICのGoogleフォーム「JICイベントカレンダー 受付（サイトから自動送信）」へ送る（kiwi.jic.123のドライブ／編集ID 1u5w31YPZLaBcbCcchZadAACkHhvw76nnnplvKpSKXrw／公開ID 1FAIpQLSeZ9z8ZKJHpCVT4Hm2pO8Cskodo9zQRMs-2DUvcO8JJUUwehQ）。回答はフォームに貯まり、新しい回答はJICのメールに通知
+- 欄：受付の種類 entry.129651137／イベント名（＋開催日時）entry.2103293136／お名前 entry.666709429／メールアドレス entry.441870969／ご相談内容・その他 entry.679977609（上記以外の項目を「項目名：値」で改行区切り）
+- Googleフォームは質問名に「日時」などを入れると自動で日付型になるので注意
+- 新しいサイト内フォームを作るときは、form-name を `jicSend` の KIND に足すだけでよい
+
+## 旧：Netlifyフォーム名（Netlify時代。hiddenフォームは残っているが使っていない）
 
 event-booking／camp-booking／kouryu-entry／soudan-booking（/soudan/）／event-entry（お話会・説明会の申込）
 ※新フォームを増やすときは、検出用のhidden静的フォームを置いてからpush
