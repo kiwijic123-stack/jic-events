@@ -1026,16 +1026,18 @@ section{padding:36px 0}
 
 /* ── 締切の帯（EVENTSに deadline: "11月13日（金）" を入れると表示。終了後は出さない） ── */
 .deadline-band{
-  display:flex;align-items:center;gap:10px;margin:2px 0 12px;padding:10px 16px;
-  background:#C8102E;color:#fff;border-radius:8px;font-size:16px;font-weight:700;letter-spacing:.05em;line-height:1.4;
-  box-shadow:0 3px 10px rgba(200,16,46,.25);
+  grid-column:1 / -1;margin:0;
+  display:flex;align-items:center;justify-content:center;gap:10px;padding:11px 14px;
+  background:#C8102E;color:#fff;font-size:min(17px, 4.1vw);font-weight:700;letter-spacing:.05em;line-height:1.3;
+  white-space:nowrap;
 }
+.deadline-band .dl-text{white-space:nowrap}
 .deadline-band .dl-mark{
   flex-shrink:0;font-size:26px;font-weight:900;line-height:1;color:#fff;
   padding-right:10px;border-right:1.5px solid rgba(255,255,255,.55);
 }
-.cat-bunpou .deadline-band{background:#8C2332;box-shadow:0 3px 10px rgba(140,35,50,.28)}
-@media(max-width:480px){.deadline-band{font-size:14.5px;padding:9px 12px;gap:9px}.deadline-band .dl-mark{font-size:23px;padding-right:9px}}
+.cat-bunpou .deadline-band{background:#8C2332}
+@media(max-width:480px){.deadline-band{padding:10px 10px;gap:9px;letter-spacing:.03em}.deadline-band .dl-mark{font-size:23px;padding-right:9px}}
 
 /* ── 次回のイベント（強調枠） ── */
 #next-event .event-card{border:2px solid #C8102E;box-shadow:0 6px 20px rgba(200,16,46,.12)}
@@ -1681,13 +1683,13 @@ window.jicSend = function(body){
         (isPast ? '振り返りシートを書く' : '振り返りシートを書く（ご参加後）') + '</a>';
     }
     return '<article class="event-card'+(isPast?' past':'')+(ev.category==='交流会'?' cat-kouryu':'')+(ev.category==='お話会'?' cat-ohanashi':'')+(ev.category==='文法会'?' cat-bunpou':'')+'" data-cat="'+ev.category+'">' +
+      (ev.deadline && !isPast ? '<p class="deadline-band"><span class="dl-mark">〆</span><span class="dl-text">お申込みは'+ev.deadline+'まで</span></p>' : '') +
       leafHTML(ev, isPast) +
       '<div class="event-body">' +
         '<div class="tag-row">' +
           '<span class="tag cat">'+(ev.category==='お話会'?'JICひろば':ev.category)+'</span>' +
           '<span class="tag fmt">'+ev.format+'</span>' +
         '</div>' +
-        (ev.deadline && !isPast ? '<p class="deadline-band"><span class="dl-mark">〆</span>お申込みは'+ev.deadline+'まで</p>' : '') +
         '<h3>'+ev.title+'</h3>' +
         (ev.image ? '<img class="event-img" src="'+ev.image+'" alt="'+ev.title+' ご案内" loading="lazy">' : '') +
         (ev.description ? '<p class="desc">'+ev.description+'</p>' : '') +
