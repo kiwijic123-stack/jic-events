@@ -1031,12 +1031,11 @@ section{padding:36px 0}
   box-shadow:0 3px 10px rgba(200,16,46,.25);
 }
 .deadline-band .dl-mark{
-  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
-  width:28px;height:28px;border-radius:50%;background:#fff;color:#C8102E;font-size:16px;font-weight:900;
+  flex-shrink:0;font-size:26px;font-weight:900;line-height:1;color:#fff;
+  padding-right:10px;border-right:1.5px solid rgba(255,255,255,.55);
 }
 .cat-bunpou .deadline-band{background:#8C2332;box-shadow:0 3px 10px rgba(140,35,50,.28)}
-.cat-bunpou .deadline-band .dl-mark{color:#8C2332}
-@media(max-width:480px){.deadline-band{font-size:15px;padding:9px 12px}}
+@media(max-width:480px){.deadline-band{font-size:14.5px;padding:9px 12px;gap:9px}.deadline-band .dl-mark{font-size:23px;padding-right:9px}}
 
 /* ── 次回のイベント（強調枠） ── */
 #next-event .event-card{border:2px solid #C8102E;box-shadow:0 6px 20px rgba(200,16,46,.12)}
