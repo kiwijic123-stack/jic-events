@@ -993,7 +993,7 @@ section{padding:36px 0}
 .cat-bunpou .date-leaf{background:#8C2332}
 .cat-bunpou.past .date-leaf{background:#B98F95}
 
-/* ── ざっくばらんお話会・Café&Bar・セミナー（ローズピンク） ── */
+/* ── JICひろば＝category"お話会"（ざっくばらんお話会・Café&Bar・セミナー／ローズピンク） ── */
 .cat-ohanashi .tag.cat{background:#FBE7EE;color:#A23F61}
 .cat-ohanashi .date-leaf{background:#B04A6C}
 .cat-ohanashi.past .date-leaf{background:#D6A3B4}
@@ -1260,7 +1260,7 @@ section{scroll-margin-top:84px}
 <div class="hero wrap" id="hero">
   <span class="eyebrow">EVENT CALENDAR</span>
   <h1>開催中の講座・イベント一覧</h1>
-  <p>JIC協会で開催しているオンライン講座や文法会、お話会、交流イベントをご案内します。<br>学び・交流・実践の場に、ぜひご参加ください。</p>
+  <p>JIC協会で開催しているオンライン講座や文法会、JICひろば、交流イベントをご案内します。<br>学び・交流・実践の場に、ぜひご参加ください。</p>
 </div>
 
 <div class="filters wrap" id="menu">
@@ -1269,7 +1269,7 @@ section{scroll-margin-top:84px}
     <button class="menu-btn" type="button" data-view="Open Session" style="--cc:#24435C">Open Session<span class="menu-n" data-cn="Open Session"></span></button>
     <button class="menu-btn" type="button" data-view="交流会" style="--cc:#C9A227">JIC受講生交流会<span class="menu-n" data-cn="交流会"></span></button>
     <button class="menu-btn" type="button" data-view="文法会" style="--cc:#8C2332">文法会<span class="menu-n" data-cn="文法会"></span></button>
-    <button class="menu-btn" type="button" data-view="お話会" style="--cc:#B04A6C">ざっくばらんお話会<span class="menu-n" data-cn="お話会"></span></button>
+    <button class="menu-btn" type="button" data-view="お話会" style="--cc:#B04A6C">JICひろば<span class="menu-n" data-cn="お話会"></span></button>
     <button class="menu-btn" type="button" data-view="courses" style="--cc:#3D6FA6">講座スケジュール</button>
   </div>
 </div>
@@ -1608,7 +1608,7 @@ section{scroll-margin-top:84px}
       leafHTML(ev, isPast) +
       '<div class="event-body">' +
         '<div class="tag-row">' +
-          '<span class="tag cat">'+ev.category+'</span>' +
+          '<span class="tag cat">'+(ev.category==='お話会'?'JICひろば':ev.category)+'</span>' +
           '<span class="tag fmt">'+ev.format+'</span>' +
         '</div>' +
         '<h3>'+ev.title+'</h3>' +
