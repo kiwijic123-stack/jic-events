@@ -7,10 +7,10 @@ JIC協会のイベントカレンダー公開サイト。運用者＝濱野優�
 
 | 項目 | 内容 |
 |---|---|
-| 公開URL | https://jic-events.netlify.app |
+| 公開URL | **https://jic-events.pages.dev**（2026-11-13〜 Cloudflare Pages）。旧 https://jic-events.netlify.app は netlify.toml で新URLへ301転送（Netlifyの無料枠が復活する11/24以降に有効） |
 | リポジトリ | https://github.com/kiwijic123-stack/jic-events （branch: main） |
-| 公開方法 | Netlify継続デプロイ。mainにpushすると自動公開（ビルドコマンドなし・公開dir=ルート） |
-| 申込通知先 | kiwi.jic.123@gmail.com（Netlify Forms「すべてのフォーム」通知設定済み） |
+| 公開方法 | Cloudflare Pages（アカウント kiwi.jic.123@gmail.com／プロジェクト jic-events）。mainにpushすると自動公開（ビルドなし・出力dir=/）。無料で月500ビルド。GitHub側はCloudflareアプリを jic-events だけに許可 |
+| 申込通知先 | kiwi.jic.123@gmail.com（Googleフォーム「JICイベントカレンダー 受付（サイトから自動送信）」のメール通知。下の「サイト内フォームの送信先」参照） |
 | 構成 | index.html 1枚（自己完結・JSレンダリング）＋ /soudan/ ＋ /camp/ ＋ チラシ画像jpg |
 
 ## 絶対に守ること
@@ -18,9 +18,9 @@ JIC協会のイベントカレンダー公開サイト。運用者＝濱野優�
 1. **push前に必ずjsdomでテストする**（過去にモーダル表示バグ・ボタン不動作で手戻りあり）
 2. **日付・曜日は必ずコードでファクトチェック**（`new Date()`で曜日算出。2027年1月などの年またぎ注意）
 3. **受講生の個人名・クラス用Zoomリンクをこのサイトに載せない**（スプレッドシートには載っているが公開禁止。公開してよいZoomは下記3つのみ）
-4. **Netlifyの手動操作（zipドラッグ等）はしない**。更新はgit pushのみ
-5. Netlifyのフォーム検出はON状態を維持（OFFにすると「送信できませんでした」になる）
-6. コンテナからapi.netlify.comへは403で届かない（GitHub経由のみ）。公開確認はWebFetchで行う
+4. **手動アップロード（zipドラッグ等）はしない**。更新はgit pushのみ（Cloudflareが自動公開）
+5. （旧）Netlifyフォームは使っていない。Netlifyは無料枠（月20デプロイ）で止まったため引っ越した。netlify.toml は旧URL転送用なので消さない
+6. 公開確認は https://jic-events.pages.dev をcurl/WebFetchで見る（反映は1〜2分）
 
 ## 更新の流れ
 

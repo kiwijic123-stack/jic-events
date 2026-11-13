@@ -1,0 +1,7 @@
+# 2026-11-13 Cloudflare Pages（https://jic-events.pages.dev）へ引っ越し。
+# 旧URL（jic-events.netlify.app）に来た人を新URLへ転送する（Netlifyだけが読むファイル。Cloudflareは無視）
+[[redirects]]
+  from = "/*"
+  to = "https://jic-events.pages.dev/:splat"
+  status = 301
+  force = true
