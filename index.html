@@ -1013,6 +1013,23 @@ section{padding:36px 0}
 #next-event .event-card{border:2px solid #C8102E;box-shadow:0 6px 20px rgba(200,16,46,.12)}
 #next-event .event-card:hover{transform:none}
 
+/* ── JIC受講生（講座スケジュール／受講生交流会の2タブ・黄色） ── */
+.student-tabs{padding:18px 0 4px}
+.student-tabs-title{text-align:center;font-size:13px;font-weight:700;color:#8F6A00;letter-spacing:.06em;margin-bottom:10px}
+.student-tab-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:520px;margin:0 auto}
+.student-tab{
+  border:2px solid #C9A227;background:#fff;color:#8F6A00;border-radius:12px;
+  padding:13px 8px;font-size:15px;font-weight:700;font-family:"Noto Sans JP",sans-serif;cursor:pointer;
+  letter-spacing:.03em;transition:background .15s,color .15s;
+}
+.student-tab:hover{background:#FBF1D3}
+.student-tab.on{background:#C9A227;color:#fff;box-shadow:0 3px 10px rgba(201,162,39,.35)}
+.student-tab .student-n{background:#FBF1D3;color:#8F6A00;margin-left:6px}
+.student-tab.on .student-n{background:rgba(255,255,255,.28);color:#fff}
+@media(max-width:400px){.student-tab{font-size:13.5px}.student-tab .student-n{display:block;margin:4px auto 0;width:max-content}}
+.course-card{border-top:4px solid #C9A227 !important}
+.course-card .session .sn{color:#8F6A00}
+
 /* ── 講座スケジュール ── */
 .course-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:700px){.course-grid{grid-template-columns:1fr}}
@@ -1267,10 +1284,9 @@ section{scroll-margin-top:84px}
   <p class="menu-lead">ご覧になりたい内容を選んでください</p>
   <div class="menu-list" id="cat-menu" role="group" aria-label="メニュー">
     <button class="menu-btn" type="button" data-view="Open Session" style="--cc:#24435C">Open Session<span class="menu-n" data-cn="Open Session"></span></button>
-    <button class="menu-btn" type="button" data-view="交流会" style="--cc:#C9A227">JIC受講生交流会<span class="menu-n" data-cn="交流会"></span></button>
+    <button class="menu-btn" type="button" data-view="courses" style="--cc:#C9A227">JIC受講生<span class="menu-n" data-cn="交流会"></span></button>
     <button class="menu-btn" type="button" data-view="文法会" style="--cc:#8C2332">文法会<span class="menu-n" data-cn="文法会"></span></button>
     <button class="menu-btn" type="button" data-view="お話会" style="--cc:#B04A6C">JICひろば<span class="menu-n" data-cn="お話会"></span></button>
-    <button class="menu-btn" type="button" data-view="courses" style="--cc:#3D6FA6">講座スケジュール</button>
   </div>
 </div>
 
@@ -1279,6 +1295,14 @@ section{scroll-margin-top:84px}
 </div>
 
 <main class="wrap">
+  <div class="student-tabs" id="student-tabs" hidden>
+    <p class="student-tabs-title">JIC受講生のみなさまへ</p>
+    <div class="student-tab-row" role="tablist" aria-label="JIC受講生">
+      <button class="student-tab" type="button" role="tab" data-goto="courses">講座スケジュール</button>
+      <button class="student-tab" type="button" role="tab" data-goto="交流会">受講生交流会<span class="menu-n student-n" data-cn="交流会"></span></button>
+    </div>
+  </div>
+
   <section id="upcoming">
     <div class="section-head"><h2>募集中のイベント</h2></div>
     <p class="section-note">開催日の近い順に表示しています。</p>
@@ -1675,6 +1699,12 @@ section{scroll-margin-top:84px}
     showEl("courses", v === "courses");
     showEl("camp", v === "camp");
     showEl("ended-training", isHome);
+    const isStudent = v === "courses" || v === "交流会";
+    showEl("student-tabs", isStudent);
+    document.querySelectorAll(".student-tab").forEach(t=>{
+      const on = t.dataset.goto === v;
+      t.classList.toggle("on", on); t.setAttribute("aria-selected", on ? "true" : "false");
+    });
     if(isCat){ applyFilter(v); } else { showEl("upcoming-none", false); }
     window.scrollTo(0, 0);
   }
