@@ -1088,6 +1088,9 @@ section{padding:36px 0}
 .course-card.bunpou-card .session .sn{color:#8C2332}
 .course-card.bunpou-card .course-time{font-size:15px;font-weight:700;color:var(--sumi)}
 #bunpou-schedule{margin-bottom:8px}
+.bunpou-card .lock-open{display:block;width:100%;max-width:none;margin:14px 0 0;padding:12px 14px;font-size:15px;background:#8C2332;border:none;cursor:pointer;font-family:inherit;line-height:1.35;box-shadow:0 3px 10px rgba(140,35,50,.28)}
+.bunpou-card .lock-open:hover{background:#6E1B27}
+.lock-sub{display:block;font-size:11.5px;font-weight:500;opacity:.9;margin-top:2px;letter-spacing:.02em}
 .lock-box{margin:22px auto 6px;max-width:560px;text-align:center;background:#FAF0F1;border:1.5px solid #E6C9CE;border-radius:14px;padding:20px 18px}
 .lock-title{margin:0 0 4px;font-size:16px;font-weight:700;color:#8C2332;letter-spacing:.05em}
 .lock-text{margin:0 0 4px;font-size:14px;color:var(--sumi)}
@@ -1372,13 +1375,8 @@ section{scroll-margin-top:84px}
 
   <section id="bunpou-schedule" hidden>
     <div class="section-head"><h2>クラス別日程</h2></div>
-    <p class="section-note">文法ブラッシュアップ講座（各クラス60分×全3回）の日程です。参加用のリンクは、各クラスの参加者のみなさまへ個別にご案内します。</p>
+    <p class="section-note">文法ブラッシュアップ講座（各クラス60分×全3回）の日程です。当日のZoomは、各クラスの「当日のZoomを見る」ボタンから、お伝えしている<strong>合言葉</strong>を入れてご覧ください（参加者専用）。</p>
     <div class="course-grid" id="bunpou-list"></div>
-    <div class="lock-box">
-      <p class="lock-title">参加者の方へ</p>
-      <p class="lock-text">当日のZoomは、お伝えしている<strong>合言葉</strong>を入れると表示されます。</p>
-      <button class="btn-detail lock-open" type="button" id="lock-open">当日のZoomを見る（参加者専用）</button>
-    </div>
   </section>
 
   <section id="upcoming">
@@ -1863,7 +1861,9 @@ window.jicSend = function(body){
       return '<div class="course-card bunpou-card">' +
         '<div class="course-head"><h3>'+c.cls+'</h3></div>' +
         '<p class="course-time">時間：<span class="nobr">'+c.time+'</span></p>' +
-        '<div class="session-list">'+rows+'</div></div>';
+        '<div class="session-list">'+rows+'</div>' +
+        '<button class="btn-detail lock-open" type="button" data-cls="'+c.cls+'">当日のZoomを見る<span class="lock-sub">参加者専用・合言葉が必要です</span></button>' +
+        '</div>';
     }).join("");
   }
 
@@ -1947,7 +1947,10 @@ window.jicSend = function(body){
     return JSON.parse(new TextDecoder().decode(plain));
   }
   function closeLock(){ lkOverlay.hidden = true; document.body.style.overflow = ""; }
-  document.getElementById("lock-open").addEventListener("click", ()=>{
+  let lockCls = "";
+  document.addEventListener("click", e=>{
+    const ob = e.target.closest(".lock-open"); if(!ob) return;
+    lockCls = ob.dataset.cls || "";
     lkErr.hidden = true; lkInput.value = "";
     lkOverlay.hidden = false; document.body.style.overflow = "hidden";
     setTimeout(()=>{ try{ lkInput.focus(); }catch(e){} }, 50);
@@ -1962,7 +1965,7 @@ window.jicSend = function(body){
     try{
       const z = await unlockBunpou(lkInput.value);
       closeLock();
-      showZoom("文法ブラッシュアップ講座（当日のZoom）", z);
+      showZoom((lockCls ? "文法ブラッシュアップ講座 "+lockCls : "文法ブラッシュアップ講座")+"（当日のZoom）", z);
     }catch(err){
       lkErr.hidden = false;
     }finally{
