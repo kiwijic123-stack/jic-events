@@ -1088,6 +1088,14 @@ section{padding:36px 0}
 .course-card.bunpou-card .session .sn{color:#8C2332}
 .course-card.bunpou-card .course-time{font-size:15px;font-weight:700;color:var(--sumi)}
 #bunpou-schedule{margin-bottom:8px}
+.lock-box{margin:22px auto 6px;max-width:560px;text-align:center;background:#FAF0F1;border:1.5px solid #E6C9CE;border-radius:14px;padding:20px 18px}
+.lock-title{margin:0 0 4px;font-size:16px;font-weight:700;color:#8C2332;letter-spacing:.05em}
+.lock-text{margin:0 0 4px;font-size:14px;color:var(--sumi)}
+.lock-box .btn-detail{background:#8C2332;border:none;cursor:pointer;font-family:inherit;margin:12px auto 0;box-shadow:0 3px 10px rgba(140,35,50,.3)}
+.lock-box .btn-detail:hover{background:#6E1B27}
+.lk-input{display:block;width:100%;box-sizing:border-box;margin:14px 0 4px;padding:13px 14px;font-size:17px;border:1.5px solid var(--line);border-radius:10px;font-family:inherit;text-align:center;letter-spacing:.08em}
+.lk-input:focus{outline:none;border-color:#8C2332}
+.lk-submit{background:#8C2332;border:none;cursor:pointer;font-family:inherit;margin:12px auto 0}
 
 /* ── 講座スケジュール ── */
 .course-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -1366,6 +1374,11 @@ section{scroll-margin-top:84px}
     <div class="section-head"><h2>クラス別日程</h2></div>
     <p class="section-note">文法ブラッシュアップ講座（各クラス60分×全3回）の日程です。参加用のリンクは、各クラスの参加者のみなさまへ個別にご案内します。</p>
     <div class="course-grid" id="bunpou-list"></div>
+    <div class="lock-box">
+      <p class="lock-title">参加者の方へ</p>
+      <p class="lock-text">当日のZoomは、お伝えしている<strong>合言葉</strong>を入れると表示されます。</p>
+      <button class="btn-detail lock-open" type="button" id="lock-open">当日のZoomを見る（参加者専用）</button>
+    </div>
   </section>
 
   <section id="upcoming">
@@ -1628,6 +1641,20 @@ section{scroll-margin-top:84px}
       <div id="km-zoom"></div>
       <p class="zm-note">開始時間になりましたら、上のURLからご参加ください。</p>
     </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="lock-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="lk-title">
+    <button class="modal-close" id="lk-close" aria-label="閉じる">×</button>
+    <p class="modal-eyebrow">参加者専用</p>
+    <h3 id="lk-title">合言葉を入れてください</h3>
+    <form id="lk-form" novalidate>
+      <input type="text" id="lk-input" class="lk-input" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="合言葉" aria-label="合言葉">
+      <p class="error" id="lk-err" hidden>合言葉が違います。もう一度お確かめください。</p>
+      <button type="submit" class="btn-detail lk-submit" id="lk-submit">開く</button>
+    </form>
+    <p class="zm-note">合言葉は、お申し込みの方にメール・LINEでお伝えしています。</p>
   </div>
 </div>
 
@@ -1895,6 +1922,53 @@ window.jicSend = function(body){
   // 参加URLポップアップ
   const overlay = document.getElementById("zoom-modal");
   let current = {};
+  function showZoom(title, z){
+    current = { url: z.url, id: z.id, pass: z.pass };
+    document.getElementById("zm-title").textContent = title;
+    const a = document.getElementById("zm-url");
+    a.href = current.url; a.textContent = current.url;
+    document.getElementById("zm-id").textContent = current.id;
+    document.getElementById("zm-pass").textContent = current.pass;
+    overlay.hidden = false;
+    document.body.style.overflow = "hidden";
+  }
+
+  // ── 文法会：合言葉で開く当日のZoom（AES-GCM／PBKDF2。合言葉の変え方は CLAUDE.md） ──
+  const BUNPOU_LOCK = { salt: "Ep9I/mtXW1VqkxIKN9JlqQ==", iv: "BSh12UiveaSQB61z", ct: "rPCtJ8XSbRO09xH5HYUXGiCSG0g09P4p6raTy3v1NJC7Y0mtigUxcYpP5ejZcLasqhn1osQ7tESk0BI6/x4TdztEunvBxhWvf5qUUzE0My6a9SS1EdY83U2NqYGnPd4cAiUOxFY6VR7INjPTY5vcYRSXNfkinXT3zMHFLFT1XPfNl7JBT1MW1G8=" };
+  const lkOverlay = document.getElementById("lock-modal");
+  const lkInput = document.getElementById("lk-input");
+  const lkErr = document.getElementById("lk-err");
+  const b64 = t => Uint8Array.from(atob(t), ch => ch.charCodeAt(0));
+  async function unlockBunpou(word){
+    const norm = String(word).normalize("NFKC").replace(/\s+/g, "");
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(norm), "PBKDF2", false, ["deriveKey"]);
+    const key = await crypto.subtle.deriveKey({name:"PBKDF2", salt:b64(BUNPOU_LOCK.salt), iterations:150000, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["decrypt"]);
+    const plain = await crypto.subtle.decrypt({name:"AES-GCM", iv:b64(BUNPOU_LOCK.iv)}, key, b64(BUNPOU_LOCK.ct));
+    return JSON.parse(new TextDecoder().decode(plain));
+  }
+  function closeLock(){ lkOverlay.hidden = true; document.body.style.overflow = ""; }
+  document.getElementById("lock-open").addEventListener("click", ()=>{
+    lkErr.hidden = true; lkInput.value = "";
+    lkOverlay.hidden = false; document.body.style.overflow = "hidden";
+    setTimeout(()=>{ try{ lkInput.focus(); }catch(e){} }, 50);
+  });
+  document.getElementById("lk-close").addEventListener("click", closeLock);
+  lkOverlay.addEventListener("click", e=>{ if(e.target === lkOverlay) closeLock(); });
+  document.getElementById("lk-form").addEventListener("submit", async e=>{
+    e.preventDefault();
+    const btn = document.getElementById("lk-submit");
+    if(!lkInput.value.trim()){ lkErr.hidden = false; return; }
+    btn.disabled = true; btn.textContent = "確認中…"; lkErr.hidden = true;
+    try{
+      const z = await unlockBunpou(lkInput.value);
+      closeLock();
+      showZoom("文法ブラッシュアップ講座（当日のZoom）", z);
+    }catch(err){
+      lkErr.hidden = false;
+    }finally{
+      btn.disabled = false; btn.textContent = "開く";
+    }
+  });
   document.addEventListener("click", e=>{
     const open = e.target.closest(".btn-zoom");
     if(open){
