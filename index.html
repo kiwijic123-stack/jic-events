@@ -956,9 +956,19 @@ section{padding:36px 0}
 .event-body h3{font-size:17.5px;color:var(--ai);line-height:1.55;margin-bottom:8px}
 .event-body p.desc{font-size:14px;color:var(--sumi);margin-bottom:12px}
 .meta{
-  display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--muted);
+  display:flex;flex-wrap:wrap;gap:4px 18px;font-size:14px;color:var(--sumi);
   padding-top:10px;border-top:1px dashed var(--line);
 }
+/* ── 日時（タイトルのすぐ下・大きく） ── */
+.when{margin:4px 0 14px;padding:10px 14px;background:#F2F5F8;border-left:4px solid var(--ai);border-radius:8px}
+.when-date{margin:0;font-size:19px;font-weight:700;color:var(--sumi);line-height:1.45;letter-spacing:.02em}
+.when-time{margin:2px 0 0;font-size:17px;font-weight:700;color:var(--sumi);line-height:1.45;letter-spacing:.03em}
+.nobr{white-space:nowrap}
+.cat-kouryu .when{border-left-color:#C9A227;background:#FBF6E6}
+.cat-bunpou .when{border-left-color:#8C2332;background:#FAF0F1}
+.cat-ohanashi .when{border-left-color:#3F8A5A;background:#EEF6F1}
+.event-card.past .when{border-left-color:#9AA3AB;background:#F3F4F5}
+@media(max-width:480px){.when-date{font-size:18px}.when-time{font-size:16.5px}}
 .meta span{display:inline-flex;align-items:center;gap:5px}
 .btn-detail{
   display:block;width:100%;max-width:400px;text-align:center;box-sizing:border-box;
@@ -1664,6 +1674,9 @@ window.jicSend = function(body){
       '<span class="w">'+WEEK[d.getDay()]+'曜日</span></div>';
   }
 
+  // 日付・時間の途中で改行しない（「11月25日（水）」「21:30 〜 22:30」をひとかたまりにする）
+  function nobrDate(t){ return String(t).replace(/(\d{1,2}月\d{1,2}日(（.）)?)/g, '<span class="nobr">$1</span>'); }
+  function nobrTime(t){ return String(t).replace(/(\d{1,2}:\d{2})\s*[ー〜~\-－]\s*(\d{1,2}:\d{2})/g, '<span class="nobr">$1 〜 $2</span>'); }
   function cardHTML(ev, isPast){
     let btn = "";
     if(!isPast && ev.zoom && ev.category === "交流会"){
@@ -1692,12 +1705,14 @@ window.jicSend = function(body){
           '<span class="tag fmt">'+ev.format+'</span>' +
         '</div>' +
         '<h3>'+ev.title+'</h3>' +
+        '<div class="when">' +
+          '<p class="when-date">'+nobrDate(ev.dateLabel)+'</p>' +
+          (ev.time ? '<p class="when-time">'+nobrTime(ev.time)+'</p>' : '') +
+        '</div>' +
         (ev.image ? '<img class="event-img" src="'+ev.image+'" alt="'+ev.title+' ご案内" loading="lazy">' : '') +
         (ev.description ? '<p class="desc">'+ev.description+'</p>' : '') +
         '<div class="meta">' +
-          '<span>📅 '+ev.dateLabel+'</span>' +
-          (ev.time ? '<span>🕘 '+ev.time+'</span>' : '') +
-          '<span>📍 '+ev.place+'</span>' +
+          '<span>'+ev.place+'</span>' +
           '<span>'+ev.fee+'</span>' +
         '</div>' + btn +
       '</div></article>';
