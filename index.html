@@ -611,6 +611,20 @@ const EVENTS = [
   参加用Zoomリンクはページには載せず、受講生へ個別案内。
   日付が過去になった回は自動でグレー表示になります。
 */
+/* ── 文法ブラッシュアップ講座のクラス別日程（文法会のページに表示）
+  参加者の名前は載せない。日付と時間だけ。hol:true で曜日に「・祝」を付ける。
+*/
+const BUNPOU_CLASSES = [
+  { cls: "N5・N4 昼クラス", time: "12:00〜13:00",
+    sessions: [ { n: "第1回", date: "2026-12-04" }, { n: "第2回", date: "2026-12-08" }, { n: "第3回", date: "2026-12-22" } ] },
+  { cls: "N5・N4 夜クラス", time: "20:00〜21:00",
+    sessions: [ { n: "第1回", date: "2026-11-23", hol: true }, { n: "第2回", date: "2026-12-03" }, { n: "第3回", date: "2026-12-07" } ] },
+  { cls: "N3クラス", time: "20:00〜21:00",
+    sessions: [ { n: "第1回", date: "2026-12-05" }, { n: "第2回", date: "2026-12-12" }, { n: "第3回", date: "2026-12-19" } ] },
+  { cls: "N2クラス", time: "14:00〜15:00",
+    sessions: [ { n: "第1回", date: "2026-11-22" }, { n: "第2回", date: "2026-12-06" }, { n: "第3回", date: "2026-12-14" } ] }
+];
+
 const COURSES = [
   {
     cohort: "1期生", cls: "金夜クラス", time: "20:30〜22:00",
@@ -1070,6 +1084,10 @@ section{padding:36px 0}
 @media(max-width:400px){.student-tab{font-size:13.5px}.student-tab .student-n{display:block;margin:4px auto 0;width:max-content}}
 .course-card{border-top:4px solid #C9A227 !important}
 .course-card .session .sn{color:#8F6A00}
+.course-card.bunpou-card{border-top:4px solid #8C2332 !important}
+.course-card.bunpou-card .session .sn{color:#8C2332}
+.course-card.bunpou-card .course-time{font-size:15px;font-weight:700;color:var(--sumi)}
+#bunpou-schedule{margin-bottom:8px}
 
 /* ── 講座スケジュール ── */
 .course-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -1343,6 +1361,12 @@ section{scroll-margin-top:84px}
       <button class="student-tab" type="button" role="tab" data-goto="交流会">受講生交流会<span class="menu-n student-n" data-cn="交流会"></span></button>
     </div>
   </div>
+
+  <section id="bunpou-schedule" hidden>
+    <div class="section-head"><h2>文法ブラッシュアップ講座 クラス別日程</h2></div>
+    <p class="section-note">各クラス60分×全3回です。参加用のリンクは、各クラスの参加者のみなさまへ個別にご案内します。</p>
+    <div class="course-grid" id="bunpou-list"></div>
+  </section>
 
   <section id="upcoming">
     <div class="section-head"><h2>募集中のイベント</h2></div>
@@ -1768,6 +1792,7 @@ window.jicSend = function(body){
     showEl("upcoming", isCat);
     showEl("past", isCat);
     showEl("courses", v === "courses");
+    showEl("bunpou-schedule", v === "文法会");
     showEl("camp", v === "camp");
     showEl("ended-training", isHome);
     const isStudent = v === "courses" || v === "交流会";
@@ -1798,6 +1823,22 @@ window.jicSend = function(body){
   document.querySelectorAll("[data-goto]").forEach(btn=>{
     btn.addEventListener("click", ()=> go(btn.dataset.goto));
   });
+
+  function renderBunpou(){
+    const box = document.getElementById("bunpou-list"); if(!box) return;
+    box.innerHTML = BUNPOU_CLASSES.map(c=>{
+      const rows = c.sessions.map(s=>{
+        const d = new Date(s.date + "T00:00:00");
+        const done = d < today;
+        const label = (d.getMonth()+1)+"月"+d.getDate()+"日（"+WEEK[d.getDay()]+(s.hol?"・祝":"")+"）";
+        return '<div class="session'+(done?' done':'')+'"><span class="sn">'+s.n+'</span><span class="sd"><span class="nobr">'+label+'</span></span></div>';
+      }).join("");
+      return '<div class="course-card bunpou-card">' +
+        '<div class="course-head"><h3>'+c.cls+'</h3></div>' +
+        '<p class="course-time">時間：<span class="nobr">'+c.time+'</span></p>' +
+        '<div class="session-list">'+rows+'</div></div>';
+    }).join("");
+  }
 
   function renderCourses(){
     const cls = {"1期生":"c1","2期生":"c2","3期生":"c3","4期生":"c4"};
@@ -2198,6 +2239,7 @@ window.jicSend = function(body){
 
   render();
   renderCourses();
+  renderBunpou();
   updateChipCounts();
   renderNextEvent();
   setView(viewFromHash());
